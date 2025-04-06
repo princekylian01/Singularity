@@ -17,7 +17,7 @@ namespace Singularity.Updater
 
             using (HttpClient client = new HttpClient())
             {
-                client.DefaultRequestHeaders.Add("User-Agent", "KiyomiUpdater");
+                client.DefaultRequestHeaders.Add("User-Agent", "SingularityUpdater");
                 string json = await client.GetStringAsync(UpdateSettings.LatestReleaseApiUrl);
                 var release = JObject.Parse(json);
 
@@ -73,7 +73,7 @@ namespace Singularity.Updater
 
             using (HttpClient client = new HttpClient(new HttpClientHandler { AllowAutoRedirect = true }))
             {
-                client.DefaultRequestHeaders.Add("User-Agent", "KiyomiUpdater");
+                client.DefaultRequestHeaders.Add("User-Agent", "SingularityUpdater.exe");
                 using (var response = await client.GetAsync(downloadUrl, HttpCompletionOption.ResponseHeadersRead))
                 {
                     response.EnsureSuccessStatusCode();

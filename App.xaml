@@ -2,10 +2,8 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              StartupUri="MainWindow.xaml">
-
     <Application.Resources>
-        
-        <SolidColorBrush x:Key="PrimaryColor" Color="#FFEB6FC7" />
+        <SolidColorBrush x:Key="PrimaryColor" Color="#367172" />
         <SolidColorBrush x:Key="AccentColor" Color="#FF333333" />
         <SolidColorBrush x:Key="WindowBackgroundColor" Color="#FFFDFDFD" />
         <SolidColorBrush x:Key="TextColor" Color="#FF333333" />
@@ -43,6 +41,8 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
+        <QuadraticEase x:Key="EaseFunction" EasingMode="EaseInOut"/>
 
     </Application.Resources>
 </Application>

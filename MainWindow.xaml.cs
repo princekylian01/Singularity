@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 using Singularity.Core;
 using Singularity.Updater;
 
@@ -41,7 +41,17 @@ namespace Singularity
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
-            Close();
+            if (DownloadLog.Text.Contains("Downloading"))
+            {
+                if (MessageBox.Show("Download in progress. Are you sure you want to close?", "Confirm", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    Close();
+                }
+            }
+            else
+            {
+                Close();
+            }
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
@@ -76,29 +86,41 @@ namespace Singularity
             Process.Start("explorer.exe", "C:\\Singularity");
         }
 
-        private void StartDownload(string url)
+        private async void StartDownload(string url)
         {
-            DownloadLog.Text = "Waiting...";
-
-            Thread thread = new Thread(() =>
+            try
             {
-                Dispatcher.Invoke(() => DownloadLog.Text = "Downloading...");
-
-                Downloader.Start(url, progress =>
+                DownloadLog.Text = "Waiting...";
+                await Task.Run(() =>
                 {
-                    Dispatcher.Invoke(() => DownloadLog.Text = progress);
+                    Dispatcher.Invoke(() => DownloadLog.Text = "Downloading...");
+                    Downloader.Start(url, progress => Dispatcher.Invoke(() => DownloadLog.Text = progress));
                 });
 
-                Dispatcher.Invoke(async () =>
+                DownloadLog.Text = "Done!";
+                var storyboard = new Storyboard();
+                var animation = new DoubleAnimation
                 {
-                    DownloadLog.Text = "Done!";
-                    await Task.Delay(5000);
-                    DownloadLog.Text = "";
-                });
-            });
+                    From = 0.5,
+                    To = 1.0,
+                    Duration = TimeSpan.FromSeconds(1),
+                    AutoReverse = true,
+                    RepeatBehavior = RepeatBehavior.Forever,
+                    EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseInOut }
+                };
+                Storyboard.SetTarget(animation, DownloadLog);
+                Storyboard.SetTargetProperty(animation, new PropertyPath("Opacity"));
+                storyboard.Children.Add(animation);
+                storyboard.Begin();
 
-            thread.IsBackground = true;
-            thread.Start();
+                await Task.Delay(7000);
+                storyboard.Stop();
+                DownloadLog.Text = "";
+            }
+            catch (Exception ex)
+            {
+                Dispatcher.Invoke(() => DownloadLog.Text = $"Error: {ex.Message}");
+            }
         }
     }
 }

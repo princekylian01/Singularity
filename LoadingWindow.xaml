@@ -7,10 +7,9 @@
         Background="Transparent"
         Width="400" 
         Height="200"
-        Loaded="Window_Loaded"
-        >
+        Loaded="Window_Loaded">
     <Border CornerRadius="12"
-            Background="{StaticResource WindowBackgroundColor}"
+            Background="#FF0A0A0A"
             BorderBrush="#FFCCCCCC"
             BorderThickness="0"
             Padding="10">
@@ -19,25 +18,148 @@
         </Border.Effect>
         <Grid>
             <TextBlock Text="Updating, please wait..." 
-                       Foreground="{StaticResource TextColor}" 
+                       Foreground="White" 
                        FontSize="16" 
                        HorizontalAlignment="Center" 
                        VerticalAlignment="Top" 
-                       Margin="0,20,0,0"/>
+                       Margin="0,70,0,0">
+                <TextBlock.Triggers>
+                    <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation
+                                    Storyboard.TargetProperty="Opacity"
+                                    From="0.5" To="1.0"
+                                    Duration="0:0:1.5"
+                                    AutoReverse="True"
+                                    RepeatBehavior="Forever"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </TextBlock.Triggers>
+            </TextBlock>
 
             <ProgressBar x:Name="UpdateProgress" 
                          Width="300" 
                          Height="20" 
-                         Margin="0,60,0,0" 
+                         Margin="0,110,0,0" 
                          HorizontalAlignment="Center" 
-                         VerticalAlignment="Top"/>
+                         VerticalAlignment="Top"
+                         Background="#FF1F1F1F"
+                         BorderThickness="0"
+                         Maximum="100">
+                <ProgressBar.Template>
+                    <ControlTemplate TargetType="ProgressBar">
+                        <Grid>
+                            <Border Background="{TemplateBinding Background}"
+                                   CornerRadius="10"
+                                   Opacity="0.8"/>
+
+                            <Border x:Name="PART_Track">
+                                <Rectangle x:Name="PART_Indicator"
+                                         HorizontalAlignment="Left"
+                                         RadiusX="10"
+                                         RadiusY="10">
+                                    <Rectangle.Fill>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                            <GradientStop Color="#FFEB6FC7" Offset="0"/>
+                                            <GradientStop Color="#FFD15AB1" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Rectangle.Fill>
+                                    <Rectangle.Effect>
+                                        <DropShadowEffect Color="#EB6FC7"
+                                                        BlurRadius="15"
+                                                        ShadowDepth="0"
+                                                        Opacity="0.6"/>
+                                    </Rectangle.Effect>
+                                </Rectangle>
+                            </Border>
+
+                            <Canvas ClipToBounds="True">
+                                <Ellipse x:Name="Particle1" 
+                                        Width="10" 
+                                        Height="10"
+                                        Fill="{StaticResource PrimaryColor}"
+                                        Opacity="0.7">
+                                    <Ellipse.RenderTransform>
+                                        <TranslateTransform X="0"/>
+                                    </Ellipse.RenderTransform>
+                                    <Ellipse.Triggers>
+                                        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                                            <BeginStoryboard>
+                                                <Storyboard RepeatBehavior="Forever">
+                                                    <DoubleAnimation
+                                                        Storyboard.TargetProperty="(RenderTransform).(TranslateTransform.X)"
+                                                        From="-20" To="320"
+                                                        Duration="0:0:1.2"
+                                                        EasingFunction="{StaticResource EaseFunction}"/>
+                                                    <DoubleAnimation
+                                                        Storyboard.TargetProperty="Opacity"
+                                                        From="0.7" To="0"
+                                                        Duration="0:0:1.2"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </Ellipse.Triggers>
+                                </Ellipse>
+                                <Ellipse x:Name="Particle2" 
+                                        Width="8" 
+                                        Height="8"
+                                        Fill="{StaticResource PrimaryColor}"
+                                        Opacity="0.5">
+                                    <Ellipse.RenderTransform>
+                                        <TranslateTransform X="0"/>
+                                    </Ellipse.RenderTransform>
+                                    <Ellipse.Triggers>
+                                        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                                            <BeginStoryboard>
+                                                <Storyboard RepeatBehavior="Forever">
+                                                    <DoubleAnimation
+                                                        Storyboard.TargetProperty="(RenderTransform).(TranslateTransform.X)"
+                                                        From="-20" To="320"
+                                                        Duration="0:0:1.5"
+                                                        BeginTime="0:0:0.3"
+                                                        EasingFunction="{StaticResource EaseFunction}"/>
+                                                    <DoubleAnimation
+                                                        Storyboard.TargetProperty="Opacity"
+                                                        From="0.5" To="0"
+                                                        Duration="0:0:1.5"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </Ellipse.Triggers>
+                                </Ellipse>
+                            </Canvas>
+
+                            <Border CornerRadius="10" 
+                                   Background="{StaticResource PrimaryColor}"
+                                   Opacity="0">
+                                <Border.Triggers>
+                                    <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation
+                                                    Storyboard.TargetProperty="Opacity"
+                                                    From="0" To="0.3"
+                                                    Duration="0:0:1"
+                                                    AutoReverse="True"
+                                                    RepeatBehavior="Forever"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Border.Triggers>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </ProgressBar.Template>
+            </ProgressBar>
 
             <TextBlock x:Name="ProgressText"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Top"
-                       Margin="0,90,0,0"
+                       Margin="0,140,0,0"
                        FontSize="14"
-                       Foreground="{StaticResource TextColor}"/>
+                       Foreground="White"/>
 
             <Button Content="X"
                     Width="30" 

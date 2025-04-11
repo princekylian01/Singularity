@@ -7,7 +7,8 @@
         AllowsTransparency="True"
         Background="Transparent"
         MouseDown="Window_MouseDown"
-        Loaded="Window_Loaded">
+        Loaded="Window_Loaded"
+        WindowStartupLocation="CenterScreen">
     <Border Background="#FF0A0A0A"
             CornerRadius="20"
             SnapsToDevicePixels="True"
@@ -29,42 +30,75 @@
             </StackPanel>
 
             <Button x:Name="CloseButton"
-                    Width="36" Height="36"
+                    Width="30" Height="30"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Top"
-                    Margin="0,10,10,0"
+                    Margin="0,15,16,0"
                     Click="CloseButton_Click"
                     Background="Transparent"
                     BorderBrush="{x:Null}"
                     Cursor="Hand">
                 <Path Data="M0,0 L10,10 M0,10 L10,0"
-                    Stroke="#55FFFFFF"
-                    StrokeThickness="2"
-                    Width="10" Height="10"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"/>
+                      Stroke="#55FFFFFF"
+                      StrokeThickness="3"
+                      Width="20" Height="20"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center" Stretch="Fill"/>
 
             </Button>
 
+            <Button x:Name="InfoButton"
+        Content="𝓲"
+        Click="InfoButton_Click"
+        VerticalAlignment="Top"
+        HorizontalAlignment="Left"
+        FontSize="26"
+        Height="30"
+        Width="30"
+        Margin="16,9,0,0"
+        Foreground="#55FFFFFF"
+        Background="Transparent"
+        BorderBrush="{x:Null}"
+        Cursor="Help"
+        ToolTipService.InitialShowDelay="100"
+        ToolTipService.ShowDuration="15000"
+        ToolTipService.Placement="Bottom"
+        ToolTipService.PlacementTarget="{Binding RelativeSource={RelativeSource Self}}">
+                <Button.ToolTip>
+                    <ToolTip Style="{StaticResource DarkTooltipStyle}">
+                        <TextBlock TextWrapping="Wrap">
+                <Run Text="App Version: " Foreground="#DDDDDD"/>
+                <Run Text="0.3" Foreground="#FFD700" FontWeight="Bold"/>
+                <LineBreak/>
+                <Run Text="Found a " Foreground="#DDDDDD"/>
+                <Run Text="bug" Foreground="#FF6347" FontWeight="Bold" TextDecorations="Underline"/>
+                <Run Text="? Write to " Foreground="#DDDDDD"/>
+                <Run Text="kyliannox@gmail.com" Foreground="#1E90FF" FontWeight="SemiBold"/>
+                        </TextBlock>
+                    </ToolTip>
+                </Button.ToolTip>
+            </Button>
+
+
             <Button x:Name="LaunchButton"
-        Width="220" Height="220"
-        Click="LaunchButton_Click"
-        BorderBrush="#55FFFFFF"
-        BorderThickness="2"
-        Cursor="Hand"
-        HorizontalAlignment="Center"
-        VerticalAlignment="Center"
-        Background="Transparent">
+                    Width="220" Height="220"
+                    Click="LaunchButton_Click"
+                    BorderBrush="#707070"
+                    BorderThickness="2"
+                    Cursor="Hand"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Background="Transparent">
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
                         <Grid>
                             <Ellipse x:Name="GlowEllipse" Opacity="0.4" StrokeThickness="0">
                                 <Ellipse.Fill>
                                     <RadialGradientBrush GradientOrigin="0.5,0.5"
-                                             Center="0.5,0.5"
-                                             RadiusX="0.8" RadiusY="0.8">
-                                        <GradientStop Color="#55FFFFFF" Offset="0"/>
-                                        <GradientStop Color="Transparent" Offset="1"/>
+                                                         Center="0.5,0.5"
+                                                         RadiusX="0.8" RadiusY="0.8">
+                                        <GradientStop Color="Transparent" Offset="0"/>
+                                        <GradientStop Color="#9e9e9e" Offset="1"/>
                                     </RadialGradientBrush>
                                 </Ellipse.Fill>
                                 <Ellipse.Effect>
@@ -73,12 +107,12 @@
                             </Ellipse>
 
                             <Ellipse x:Name="MainEllipse"
-                         Stroke="{TemplateBinding BorderBrush}"
-                         StrokeThickness="{TemplateBinding BorderThickness}">
+                                     Stroke="{TemplateBinding BorderBrush}"
+                                     StrokeThickness="{TemplateBinding BorderThickness}">
                                 <Ellipse.Fill>
                                     <RadialGradientBrush GradientOrigin="0.5,0.5"
-                                             Center="0.5,0.5"
-                                             RadiusX="0.6" RadiusY="0.6">
+                                                         Center="0.5,0.5"
+                                                         RadiusX="0.6" RadiusY="0.6">
                                         <GradientStop Color="#141414" Offset="0"/>
                                         <GradientStop Color="#0a0a0a" Offset="1"/>
                                     </RadialGradientBrush>
@@ -86,51 +120,51 @@
                             </Ellipse>
 
                             <Ellipse x:Name="HoverGlow"
-                         Opacity="0"
-                         Fill="#252525">
+                                     Opacity="0"
+                                     Fill="#252525">
                                 <Ellipse.Effect>
                                     <BlurEffect Radius="15"/>
                                 </Ellipse.Effect>
                             </Ellipse>
-                            
+
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="CommonStates">
                                     <VisualState x:Name="Normal">
                                         <Storyboard>
                                             <DoubleAnimation Storyboard.TargetName="HoverGlow"
-                                 Storyboard.TargetProperty="Opacity"
-                                 To="0" Duration="0:0:0.3"/>
+                                                             Storyboard.TargetProperty="Opacity"
+                                                             To="0" Duration="0:0:0.3"/>
                                             <DoubleAnimation Storyboard.TargetName="GlowEllipse"
-                                 Storyboard.TargetProperty="Opacity"
-                                 To="0.4" Duration="0:0:0.3"/>
+                                                             Storyboard.TargetProperty="Opacity"
+                                                             To="0.4" Duration="0:0:0.3"/>
                                             <DoubleAnimation Storyboard.TargetName="MainEllipse"
-                                 Storyboard.TargetProperty="StrokeThickness"
-                                 To="2" Duration="0:0:0.3"/>
+                                                             Storyboard.TargetProperty="StrokeThickness"
+                                                             To="2" Duration="0:0:0.3"/>
                                         </Storyboard>
                                     </VisualState>
 
                                     <VisualState x:Name="MouseOver">
                                         <Storyboard>
                                             <DoubleAnimation Storyboard.TargetName="HoverGlow"
-                                 Storyboard.TargetProperty="Opacity"
-                                 To="0.5" Duration="0:0:0.3"/>
+                                                             Storyboard.TargetProperty="Opacity"
+                                                             To="0.5" Duration="0:0:0.3"/>
                                             <DoubleAnimation Storyboard.TargetName="GlowEllipse"
-                                 Storyboard.TargetProperty="Opacity"
-                                 To="0.8" Duration="0:0:0.3"/>
+                                                             Storyboard.TargetProperty="Opacity"
+                                                             To="0.8" Duration="0:0:0.3"/>
                                             <DoubleAnimation Storyboard.TargetName="MainEllipse"
-                                 Storyboard.TargetProperty="StrokeThickness"
-                                 To="3" Duration="0:0:0.3"/>
+                                                             Storyboard.TargetProperty="StrokeThickness"
+                                                             To="3" Duration="0:0:0.3"/>
                                         </Storyboard>
                                     </VisualState>
 
                                     <VisualState x:Name="Pressed">
                                         <Storyboard>
                                             <DoubleAnimation Storyboard.TargetName="HoverGlow"
-                                 Storyboard.TargetProperty="Opacity"
-                                 To="0.7" Duration="0:0:0.2"/>
+                                                             Storyboard.TargetProperty="Opacity"
+                                                             To="0.7" Duration="0:0:0.2"/>
                                             <DoubleAnimation Storyboard.TargetName="MainEllipse"
-                                 Storyboard.TargetProperty="StrokeThickness"
-                                 To="4" Duration="0:0:0.2"/>
+                                                             Storyboard.TargetProperty="StrokeThickness"
+                                                             To="4" Duration="0:0:0.2"/>
                                         </Storyboard>
                                     </VisualState>
 

@@ -16,8 +16,8 @@ namespace Singularity.Core
                 return "Pornhub";
             if (host.Contains("instagram.com"))
                 return "Instagram";
-            if (host.Contains("x.com") || host.Contains("twitter.com"))
-                return "Twitter";
+            if(host.Contains("x.com") || host.Contains("twitter.com"))
+                    return "Twitter";
             return "Unknown";
         }
     }

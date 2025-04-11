@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Windows;
 using Newtonsoft.Json.Linq;
+using Singularity.Core;
 
 namespace Singularity.Updater
 {
@@ -13,28 +16,43 @@ namespace Singularity.Updater
 
         public static async Task<bool> IsUpdateAvailableAsync()
         {
+            Logger.Info("Проверка доступности обновлений");
             Version localVersion = Assembly.GetExecutingAssembly().GetName().Version;
+            Logger.Info($"Локальная версия: {localVersion}");
 
-            using (HttpClient client = new HttpClient())
+            try
             {
-                client.DefaultRequestHeaders.Add("User-Agent", "KiyomiUpdater");
-                string json = await client.GetStringAsync(UpdateSettings.LatestReleaseApiUrl);
-                var release = JObject.Parse(json);
+                using (HttpClient client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Add("User-Agent", "SingularityUpdater");
+                    string json = await client.GetStringAsync(UpdateSettings.LatestReleaseApiUrl);
+                    var release = JObject.Parse(json);
 
-                string tagName = release["tag_name"]?.ToString() ?? "";
-                if (tagName.StartsWith("v", StringComparison.OrdinalIgnoreCase))
-                {
-                    tagName = tagName.Substring(1);
-                }
+                    string tagName = release["tag_name"]?.ToString() ?? "";
+                    Logger.Info($"Получен тег релиза: {tagName}");
+                    if (tagName.StartsWith("v", StringComparison.OrdinalIgnoreCase))
+                    {
+                        tagName = tagName.Substring(1);
+                    }
 
-                if (Version.TryParse(tagName, out Version gitVersion))
-                {
-                    return gitVersion > localVersion;
+                    if (Version.TryParse(tagName, out Version gitVersion))
+                    {
+                        Logger.Info($"Версия на GitHub: {gitVersion}");
+                        bool isNewer = gitVersion > localVersion;
+                        Logger.Info($"Доступно обновление: {isNewer}");
+                        return isNewer;
+                    }
+                    else
+                    {
+                        Logger.Warn("Не удалось распознать версию релиза");
+                        return false;
+                    }
                 }
-                else
-                {
-                    return false;
-                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error($"Ошибка при проверке обновлений: {ex.Message}");
+                return false;
             }
         }
 
@@ -42,27 +60,32 @@ namespace Singularity.Updater
             Action<int> onProgressChanged,
             Action<bool, string> onCompleted)
         {
+            Logger.Info("Начало процесса обновления");
             try
             {
                 await DownloadLatestReleaseAsync(onProgressChanged);
-
+                Logger.Info("Распаковка обновления");
                 FileExtractor.ExtractZipOverwrite(UpdateZipFile, ".");
 
                 if (File.Exists(UpdateZipFile))
                 {
+                    Logger.Info("Удаление временного файла update.zip");
                     File.Delete(UpdateZipFile);
                 }
 
-                string exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
-                System.Diagnostics.Process.Start(exePath);
+                string exePath = Process.GetCurrentProcess().MainModule.FileName;
+                Logger.Info($"Перезапуск приложения: {exePath}");
+                Process.Start(exePath);
 
                 onCompleted(true, "Update applied successfully.");
+                Logger.Info("Обновление успешно применено");
 
                 await Task.Delay(500);
-                System.Windows.Application.Current.Shutdown();
+                Application.Current.Shutdown();
             }
             catch (Exception ex)
             {
+                Logger.Error($"Ошибка при установке обновления: {ex.Message}");
                 onCompleted(false, $"Ошибка при установке обновления: {ex.Message}");
             }
         }
@@ -70,10 +93,11 @@ namespace Singularity.Updater
         private static async Task DownloadLatestReleaseAsync(Action<int> onProgressChanged)
         {
             string downloadUrl = UpdateSettings.DownloadUrl;
+            Logger.Info($"Скачивание обновления с {downloadUrl}");
 
             using (HttpClient client = new HttpClient(new HttpClientHandler { AllowAutoRedirect = true }))
             {
-                client.DefaultRequestHeaders.Add("User-Agent", "KiyomiUpdater");
+                client.DefaultRequestHeaders.Add("User-Agent", "SingularityUpdater.exe");
                 using (var response = await client.GetAsync(downloadUrl, HttpCompletionOption.ResponseHeadersRead))
                 {
                     response.EnsureSuccessStatusCode();
@@ -95,15 +119,18 @@ namespace Singularity.Updater
                             {
                                 int progress = (int)((totalRead * 100) / totalBytes.Value);
                                 onProgressChanged?.Invoke(progress);
+                                Logger.Info($"Прогресс скачивания: {progress}%");
                             }
                             else
                             {
                                 onProgressChanged?.Invoke((int)(totalRead / 1024));
+                                Logger.Info($"Скачано: {totalRead / 1024} KB");
                             }
                         }
                     }
                 }
             }
+            Logger.Info("Скачивание обновления завершено");
         }
     }
 }

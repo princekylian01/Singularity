@@ -1,0 +1,102 @@
+<Window x:Class="Singularity.LoadingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Updating..." 
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Width="400" 
+        Height="200"
+        Loaded="Window_Loaded"
+        WindowStartupLocation="CenterScreen">
+    <Border CornerRadius="12"
+            Background="#FF0A0A0A"
+            BorderBrush="#FFCCCCCC"
+            BorderThickness="0"
+            Padding="10">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.3"/>
+        </Border.Effect>
+        <Grid>
+            <TextBlock Text="Updating, please wait..." 
+                       Foreground="White" 
+                       FontSize="16" 
+                       HorizontalAlignment="Center" 
+                       VerticalAlignment="Top" 
+                       Margin="0,70,0,0">
+                <TextBlock.Triggers>
+                    <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation
+                                    Storyboard.TargetProperty="Opacity"
+                                    From="0.5" To="1.0"
+                                    Duration="0:0:1.5"
+                                    AutoReverse="True"
+                                    RepeatBehavior="Forever"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </TextBlock.Triggers>
+            </TextBlock>
+
+            <ProgressBar x:Name="UpdateProgress" 
+                         Width="300" 
+                         Height="20" 
+                         Margin="0,110,0,0" 
+                         HorizontalAlignment="Center" 
+                         VerticalAlignment="Top"
+                         Background="#FF1F1F1F"
+                         BorderThickness="0"
+                         Maximum="100">
+                <ProgressBar.Template>
+                    <ControlTemplate TargetType="ProgressBar">
+                        <Grid>
+                            <Border Background="{TemplateBinding Background}"
+                                   CornerRadius="10"
+                                   Opacity="0.8"/>
+
+                            <Border x:Name="PART_Track">
+                                <Rectangle x:Name="PART_Indicator"
+                                         HorizontalAlignment="Left"
+                                         RadiusX="10"
+                                         RadiusY="10">
+                                    <Rectangle.Fill>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                            <GradientStop Color="#FFEB6FC7" Offset="0"/>
+                                            <GradientStop Color="#FFD15AB1" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Rectangle.Fill>
+                                    <Rectangle.Effect>
+                                        <DropShadowEffect Color="#EB6FC7"
+                                                        BlurRadius="15"
+                                                        ShadowDepth="0"
+                                                        Opacity="0.6"/>
+                                    </Rectangle.Effect>
+                                </Rectangle>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </ProgressBar.Template>
+            </ProgressBar>
+
+            <TextBlock x:Name="ProgressText"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       Margin="0,140,0,0"
+                       FontSize="14"
+                       Foreground="White"/>
+
+            <Button Content="X"
+                    Width="30" 
+                    Height="30"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Margin="0,10,10,0"
+                    Click="CloseButton_Click"
+                    Background="Transparent"
+                    Foreground="#FF444444"
+                    BorderBrush="{x:Null}"/>
+        </Grid>
+    </Border>
+</Window>

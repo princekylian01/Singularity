@@ -2,7 +2,7 @@
 
 **Singularity** is a minimal WPF desktop app focused on clean architecture, modularity, and ease of updates.
 
-It is designed to download videos from platforms like **YouTube**, **TikTok**, **Instagram**, **X**, and more using `yt-dlp`, with support for cookies and custom output formatting.
+It is designed to download videos from platforms like **YouTube**, **TikTok**, **Instagram**, **X**, and more using `yt-dlp`.
 
 ---
 
@@ -47,7 +47,7 @@ It is designed to download videos from platforms like **YouTube**, **TikTok**, *
 
 ## 📷 UI Preview
 
-> *coming soon — screenshots and interface preview*
+[📸 Screenshot](https://sun9-61.userapi.com/impg/R0J3Eqh6qEna28eZwSP8AvF0IyH1XfGdRHVlUA/pNsMikn3BiE.jpg?size=450x600&quality=95&sign=d33cb429cce0f89dfdb937894423fd78&type=album)
 
 ---
 
